@@ -5,9 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="reactivities.db" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
       <PrivateAssets>all</PrivateAssets>
@@ -21,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Reactivities.Application\Reactivities.Application.csproj" />
+    <ProjectReference Include="..\Reactivities.Infrastracture\Reactivities.Infrastracture.csproj" />
   </ItemGroup>
 
 

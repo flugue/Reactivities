@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reactivities.Web", "Reactiv
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{F997E19B-8A42-487A-BA2E-76C3D2624837}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactivities.Infrastracture", "Reactivities.Infrastracture\Reactivities.Infrastracture.csproj", "{29B673F0-2EDA-45AA-9B9F-8DF9E5190E46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{DAF83D26-8B83-4826-B5FB-5CB569EBE1D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAF83D26-8B83-4826-B5FB-5CB569EBE1D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAF83D26-8B83-4826-B5FB-5CB569EBE1D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B673F0-2EDA-45AA-9B9F-8DF9E5190E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B673F0-2EDA-45AA-9B9F-8DF9E5190E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B673F0-2EDA-45AA-9B9F-8DF9E5190E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B673F0-2EDA-45AA-9B9F-8DF9E5190E46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Reactivities.Application.Profiles;
+using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Reactivities.Domain
+namespace Reactivities.Application.Activities
 {
-    public class Activity
+    public class ActivityDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -12,9 +14,8 @@ namespace Reactivities.Domain
         public string Category { get; set; }
         public string City { get; set; }
         public string Venue { get; set; }
+        public string HostUsername { get; set; }
         public bool IsCancelled { get; set; }
-
-        public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
-
+        public ICollection<Profile> Attendees { get; set; }
     }
 }

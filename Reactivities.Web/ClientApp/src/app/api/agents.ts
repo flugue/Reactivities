@@ -11,7 +11,7 @@ const sleep = (delay: number) => {
     })
 }
 
-axios.defaults.baseURL = 'https://localhost:44361/api';
+axios.defaults.baseURL = 'https://localhost:44350/api';
 
 axios.interceptors.request.use(config => {
     const token = store.commonStore.token;
