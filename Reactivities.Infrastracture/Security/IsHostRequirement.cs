@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Reactivities.Persistence;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Reactivities.Infrastracture.Security
@@ -29,18 +27,22 @@ namespace Reactivities.Infrastracture.Security
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement)
         {
-            var token = HttpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            var tokenClaims = new JwtSecurityToken(token.Replace("Bearer ", string.Empty));
-            var userId = tokenClaims.Payload["id"].ToString();
+            var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId == null) return Task.CompletedTask;
 
-            var activityId = Guid.Parse(HttpContextAccessor.HttpContext?.Request.RouteValues.SingleOrDefault(x => x.Key == "id").Value?.ToString());
-            var attendee = DbContext.ActivityAttendees.FindAsync(activityId, userId).Result;
+            var activityId = Guid.Parse(HttpContextAccessor.HttpContext?.Request.RouteValues
+                .SingleOrDefault(x => x.Key == "id").Value?.ToString());
 
-            if (attendee==null) return Task.CompletedTask;
+            var attendee = DbContext.ActivityAttendees
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.AppUserId == userId && x.ActivityId == activityId)
+                .Result;
+
+            if (attendee == null) return Task.CompletedTask;
 
             if (attendee.IsHost) context.Succeed(requirement);
+
             return Task.CompletedTask;
         }
     }

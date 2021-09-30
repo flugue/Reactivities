@@ -41,13 +41,13 @@ namespace Reactivities.Api
             });
 
             services.AddControllers(opt =>
-                {
-                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                    opt.Filters.Add(new AuthorizeFilter(policy));
-                })
-                .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            });
+            //.AddNewtonsoftJson(options =>
+            //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            //);
 
             services.AddAutoMapper(typeof(MappingProfiles));
 
@@ -66,7 +66,8 @@ namespace Reactivities.Api
                 opt.Password.RequireNonAlphanumeric = false;
             })
                 .AddEntityFrameworkStores<DataContext>()
-                .AddSignInManager<SignInManager<AppUser>>();
+                .AddSignInManager<SignInManager<AppUser>>()
+                .AddDefaultTokenProviders(); ;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
 
@@ -77,7 +78,8 @@ namespace Reactivities.Api
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = key,
-                        ValidateIssuer = false
+                        ValidateIssuer = false,
+                        ValidateAudience = false
                     };
                 });
 
@@ -89,7 +91,7 @@ namespace Reactivities.Api
                 });
             });
 
-            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();  
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             services.AddScoped<TokenService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
@@ -101,26 +103,26 @@ namespace Reactivities.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+                // specifying the Swagger JSON endpoint.
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                });
             }
-            app.UseCors("MyPolicy");
-
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors("MyPolicy");
+
+            //app.UseHttpsRedirection();
+
 
             //MAKE SURE OF THE ORDERING
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

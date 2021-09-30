@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Reactivities.Api.Controllers
@@ -30,6 +31,7 @@ namespace Reactivities.Api.Controllers
             Mapper = mapper;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ActivityDto>>> GetActivities()
         {
@@ -50,9 +52,7 @@ namespace Reactivities.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(Activity activity)
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            var tokenClaims = new JwtSecurityToken(token.Replace("Bearer ", string.Empty));
-            var email = tokenClaims.Payload["email"].ToString();
+            var email = User.FindFirstValue(ClaimTypes.Email);
             var user = await UserManager.FindByEmailAsync(email);
 
             var attendee = new ActivityAttendee
