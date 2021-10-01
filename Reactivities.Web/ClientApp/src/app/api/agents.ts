@@ -23,7 +23,7 @@ axios.interceptors.response.use(async response => {
     await sleep(1000);
     return response;
 }, (error: AxiosError) => {
-    const { data, status } = error.response!;
+    const { status } = error.response!;
     switch (status) {
         case 400:
             toast.error('Bad Request');

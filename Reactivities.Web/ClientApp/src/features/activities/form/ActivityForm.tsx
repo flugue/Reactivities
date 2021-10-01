@@ -1,9 +1,10 @@
-﻿import * as React from 'react';
-import { Form, Formik } from 'formik';
+﻿import { Form, Formik } from 'formik';
 import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { Button, Header, Segment } from 'semantic-ui-react';
+import { v4 as uuid } from 'uuid';
 import * as Yup from 'yup';
 import DateInput from '../../../app/common/form/DateInput';
 import SelectInput from '../../../app/common/form/SelectInput';
@@ -11,14 +12,13 @@ import TextArea from '../../../app/common/form/TextArea';
 import TextInput from '../../../app/common/form/TextInput';
 import { categoryOptions } from '../../../app/common/options/categoryOptions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
-import { Activity, ActivityFormValues } from '../../../app/models/activity';
+import { ActivityFormValues } from '../../../app/models/activity';
 import { useStore } from '../../../app/stores/store';
-import { v4 as uuid } from 'uuid';
 
 function ActivityForm() {
 
     const { activityStore } = useStore();
-    const { loading, loadActivity, loadingInitial, createActivity, updateActivity } = activityStore;
+    const { loadActivity, loadingInitial, createActivity, updateActivity } = activityStore;
     const { id } = useParams<{ id: string }>();
 
     const history = useHistory();

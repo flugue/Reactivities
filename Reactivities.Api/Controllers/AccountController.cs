@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Reactivities.Api.DTOs;
 using Reactivities.Api.Services;
 using Reactivities.Domain;
+using Reactivities.Persistence;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -19,22 +20,24 @@ namespace Reactivities.Api.Controllers
     {
         public AccountController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            TokenService tokenService)
+            TokenService tokenService,
+            DataContext context)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             TokenService = tokenService;
+            Context = context;
         }
 
         public UserManager<AppUser> UserManager { get; }
         public SignInManager<AppUser> SignInManager { get; }
         public TokenService TokenService { get; }
-
+        public DataContext Context { get; }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto dto)
         {
-            var user = await UserManager.FindByEmailAsync(dto.Email);
+            var user = await UserManager.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Email == dto.Email);
 
             if (user == null)
                 return Unauthorized();
@@ -81,12 +84,10 @@ namespace Reactivities.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            var tokenClaims = new JwtSecurityToken(token.Replace("Bearer ", string.Empty));
-            var email = tokenClaims.Payload["email"].ToString();
-            var user = await UserManager.FindByEmailAsync(email);
+            var user = await UserManager.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
             return CreateUserObject(user);
         }
+
 
         private UserDto CreateUserObject(AppUser user)
         {
@@ -94,7 +95,7 @@ namespace Reactivities.Api.Controllers
             {
                 DisplayName = user.DisplayName,
                 Username = user.UserName,
-                Image = null,
+                Image = user?.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
                 Token = TokenService.CreateToken(user)
             };
         }

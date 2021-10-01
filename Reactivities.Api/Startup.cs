@@ -13,6 +13,7 @@ using Reactivities.Api.Services;
 using Reactivities.Application.Core;
 using Reactivities.Application.Interfaces;
 using Reactivities.Domain;
+using Reactivities.Infrastracture.Photos;
 using Reactivities.Infrastracture.Security;
 using Reactivities.Persistence;
 using System.Text;
@@ -95,6 +96,8 @@ namespace Reactivities.Api
 
             services.AddScoped<TokenService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
